@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  extends: "expo",
+  extends: ["expo"],
   plugins: ["prettier", "simple-import-sort", "import"],
   rules: {
     "import/first": "error",
