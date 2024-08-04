@@ -1,7 +1,7 @@
 -- Create users table
 create table users (
     id uuid primary key references auth.users(id) on delete cascade,
-    avatar_url text not null,
+    avatar_url text,
     email text unique,
     full_name text not null,
     created_at timestamptz default current_timestamp,

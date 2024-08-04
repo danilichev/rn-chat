@@ -1,14 +1,4 @@
-import { AppState, StyleSheet, Text, View } from "react-native";
-
-import { supabase } from "src/infra/supabase";
-
-AppState.addEventListener("change", (state) => {
-  if (state === "active") {
-    supabase.auth.startAutoRefresh();
-  } else {
-    supabase.auth.stopAutoRefresh();
-  }
-});
+import { StyleSheet, Text, View } from "react-native";
 
 export default function Home() {
   return (

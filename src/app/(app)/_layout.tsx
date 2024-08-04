@@ -1,6 +1,6 @@
 import { Redirect, Slot } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet } from "react-native";
+import { ActivityIndicator, AppState, StyleSheet } from "react-native";
 
 import { supabase } from "src/infra/supabase";
 
@@ -10,14 +10,24 @@ export default function AppLayout() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setAuthed(!!session);
+      const user = session?.user;
+
+      if (user) {
+        supabase.auth.onAuthStateChange((_, session) => {
+          setAuthed(!!session?.user);
+        });
+
+        AppState.addEventListener("change", (state) => {
+          if (state === "active") {
+            supabase.auth.startAutoRefresh();
+          } else {
+            supabase.auth.stopAutoRefresh();
+          }
+        });
+      }
+
+      setAuthed(!!user);
       setLoading(false);
-
-      supabase.auth.signOut();
-    });
-
-    supabase.auth.onAuthStateChange((_, session) => {
-      setAuthed(!!session);
     });
   }, []);
 
