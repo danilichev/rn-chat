@@ -1,6 +1,15 @@
 -- Enable row level security
 alter table users enable row level security;
 
+create policy "Users are viewable by everyone." on users
+  for select using (true);
+
+create policy "User can insert their own data." on users
+  for insert with check ((select auth.uid()) = id);
+
+create policy "Users can update own data." on users
+  for update using ((select auth.uid()) = id);
+
 -- inserts a row into public.users every time a new user is created
 create function public.handle_new_user()
 returns trigger

@@ -40,8 +40,8 @@ declare
     user_data jsonb[] := array[
         '{"email": "bob@email.com", "full_name": "Sponge Bob"}'::jsonb,
         '{"email": "patrick@email.com", "full_name": "Patrick Star"}'::jsonb,
-        '{"email": "squidward@email.com", "full_name": "Squidward Tentacles"}'::jsonb
-        '{"email": "krabs@email.com", "full_name": "Mr. Krabs"}'::jsonb
+        '{"email": "squidward@email.com", "full_name": "Squidward Tentacles"}'::jsonb,
+        '{"email": "krabs@email.com", "full_name": "Mr. Krabs"}'::jsonb,
         '{"email": "sandy@email.com", "full_name": "Sandy Cheeks"}'::jsonb
     ];
     common_password text := 'Qweqwe123';
