@@ -1,10 +1,11 @@
 import { Button, Input } from "@rneui/themed";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 
+import { signInWithEmail, signUpWithEmail } from "src/api/auth";
 import { LinkButton } from "src/components/LinkButton";
-import { supabase } from "src/infra/supabase";
 
 type AuthFormProps = {
   type: "sign-in" | "sign-up";
@@ -15,64 +16,38 @@ export const AuthForm = ({ type }: AuthFormProps) => {
 
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
-  const [isLoading, setLoading] = useState(false);
   const [password, setPassword] = useState("");
 
-  const signInWithEmail = async () => {
-    try {
-      setLoading(true);
-      const { error } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: password,
-      });
+  const {
+    isPending: isSignInWithEmailPending,
+    mutateAsync: signInWithEmailAsync,
+  } = useMutation({
+    mutationFn: signInWithEmail,
+    onError: (error) => Alert.alert("Sign in failure", error.message),
+    onSuccess: () => router.replace("/"),
+  });
 
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      router.replace("/");
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        Alert.alert("Sign in failure", error.message);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const signUpWithEmail = async () => {
-    try {
-      setLoading(true);
-
-      const {
-        data: { session },
-        error,
-      } = await supabase.auth.signUp({
-        email: email,
-        password: password,
-        options: {
-          data: {
-            email: email,
-            full_name: fullName,
-          },
-        },
-      });
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      if (!session) {
+  const {
+    isPending: isSignUpWithEmailPending,
+    mutateAsync: signUpWithEmailAsync,
+  } = useMutation({
+    mutationFn: signUpWithEmail,
+    onError: () => Alert.alert("Sign-up failure, please try again later"),
+    onSuccess: (data) => {
+      if (data?.session) {
         Alert.alert("Please check your inbox for email verification!");
       }
 
       router.replace("/");
-    } catch (error) {
-      console.log("signUpWithEmail:error", error);
-      Alert.alert("Sign-up failure, please try again later");
-    } finally {
-      setLoading(false);
-    }
+    },
+  });
+
+  const onPressSignInWithEmail = async () => {
+    await signInWithEmailAsync({ email, password });
+  };
+
+  const onPressSignUpWithEmail = async () => {
+    await signUpWithEmailAsync({ email, fullName, password });
   };
 
   return (
@@ -106,10 +81,10 @@ export const AuthForm = ({ type }: AuthFormProps) => {
       />
       <Button
         containerStyle={styles.buttonContainer}
-        disabled={isLoading}
+        disabled={isSignInWithEmailPending || isSignUpWithEmailPending}
         {...(type === "sign-in"
-          ? { onPress: signInWithEmail, title: "Sign in" }
-          : { onPress: signUpWithEmail, title: "Sign up" })}
+          ? { onPress: onPressSignInWithEmail, title: "Sign in" }
+          : { onPress: onPressSignUpWithEmail, title: "Sign up" })}
       />
       <LinkButton
         containerStyle={styles.buttonContainer}
