@@ -4,6 +4,7 @@
   "main": "expo-router/entry",
   "scripts": {
     "android": "expo start --android",
+    "gen-db-types": "supabase gen types typescript --local --schema=public > src/types/database.ts",
     "ios": "expo start --ios",
     "lint": "eslint .",
     "start": "expo start",

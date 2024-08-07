@@ -6,6 +6,7 @@ import * as aesjs from "aes-js";
 import * as SecureStore from "expo-secure-store";
 
 import { config } from "src/config";
+import { Database } from "src/types/database";
 
 export type { Session };
 
@@ -63,11 +64,15 @@ class LargeSecureStore {
   }
 }
 
-export const supabase = createClient(config.supabaseUrl, config.supabaseKey, {
-  auth: {
-    autoRefreshToken: true,
-    detectSessionInUrl: false,
-    persistSession: true,
-    storage: new LargeSecureStore(),
+export const supabase = createClient<Database>(
+  config.supabaseUrl,
+  config.supabaseKey,
+  {
+    auth: {
+      autoRefreshToken: true,
+      detectSessionInUrl: false,
+      persistSession: true,
+      storage: new LargeSecureStore(),
+    },
   },
-});
+);
