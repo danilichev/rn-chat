@@ -4,3 +4,11 @@ export interface User {
   fullName: string;
   id: string;
 }
+
+export interface UserSession {
+  accessToken: string;
+  expiresAt?: Date;
+  refreshToken?: string;
+  tokenType: string;
+  userId: string;
+}

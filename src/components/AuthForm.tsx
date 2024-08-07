@@ -34,7 +34,7 @@ export const AuthForm = ({ type }: AuthFormProps) => {
     mutationFn: signUpWithEmail,
     onError: () => Alert.alert("Sign-up failure, please try again later"),
     onSuccess: (data) => {
-      if (data?.session) {
+      if (data) {
         Alert.alert("Please check your inbox for email verification!");
       }
 

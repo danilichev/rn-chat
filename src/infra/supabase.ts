@@ -8,7 +8,7 @@ import * as SecureStore from "expo-secure-store";
 import { config } from "src/config";
 import { Database } from "src/types/database";
 
-export type { Session };
+export type { Session as SupabaseSession };
 
 class LargeSecureStore {
   private async decrypt(key: string, value: string) {

@@ -1,4 +1,6 @@
 import { supabase } from "src/infra/supabase";
+import { UserSession } from "src/types/domain";
+import { supabaseSessionToUserSession } from "src/utils/mappers";
 
 export interface SignInWithEmailParams {
   email: string;
@@ -7,14 +9,16 @@ export interface SignInWithEmailParams {
 
 export const signInWithEmail = async (
   params: SignInWithEmailParams,
-): Promise<string> => {
+): Promise<UserSession> => {
   const { data, error } = await supabase.auth.signInWithPassword(params);
 
   if (error) throw error;
 
   if (!data?.user) throw new Error("User not found");
 
-  return data.user.id;
+  if (!data?.session) throw new Error("User is not authenticated");
+
+  return supabaseSessionToUserSession(data.session);
 };
 
 export interface SignUpWithEmailParams {
@@ -23,7 +27,9 @@ export interface SignUpWithEmailParams {
   password: string;
 }
 
-export const signUpWithEmail = async (params: SignUpWithEmailParams) => {
+export const signUpWithEmail = async (
+  params: SignUpWithEmailParams,
+): Promise<UserSession | null> => {
   const { data, error } = await supabase.auth.signUp({
     email: params.email,
     password: params.password,
@@ -39,7 +45,7 @@ export const signUpWithEmail = async (params: SignUpWithEmailParams) => {
 
   if (!data?.user) throw new Error("User not found");
 
-  return data.user.id;
+  return data?.session ? supabaseSessionToUserSession(data.session) : null;
 };
 
 export const signOut = async () => {
