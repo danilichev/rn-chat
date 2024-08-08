@@ -56,7 +56,7 @@ export const AuthForm = ({ type }: AuthFormProps) => {
         <Input
           autoCapitalize="none"
           label="Full Name"
-          leftIcon={{ type: "font-awesome", name: "user" }}
+          leftIcon={{ type: "feather", name: "user" }}
           onChangeText={setFullName}
           placeholder="John Doe"
           value={fullName}
@@ -65,7 +65,7 @@ export const AuthForm = ({ type }: AuthFormProps) => {
       <Input
         autoCapitalize={"none"}
         label="Email"
-        leftIcon={{ type: "font-awesome", name: "envelope" }}
+        leftIcon={{ type: "feather", name: "mail" }}
         onChangeText={setEmail}
         placeholder="email@address.com"
         value={email}
@@ -73,8 +73,8 @@ export const AuthForm = ({ type }: AuthFormProps) => {
       <Input
         autoCapitalize="none"
         label="Password"
-        leftIcon={{ type: "font-awesome", name: "lock" }}
-        onChangeText={(text) => setPassword(text)}
+        leftIcon={{ type: "feather", name: "lock" }}
+        onChangeText={setPassword}
         placeholder="Password"
         secureTextEntry
         value={password}

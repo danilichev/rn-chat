@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Redirect, Slot } from "expo-router";
+import { Stack } from "expo-router/stack";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, AppState, StyleSheet } from "react-native";
 
@@ -43,7 +44,14 @@ export default function AppLayout() {
     return <ActivityIndicator style={styles.container} />;
   }
 
-  return isAuthed ? <Slot /> : <Redirect href="/sign-in" />;
+  return isAuthed ? (
+    <Stack screenOptions={{ headerBackTitleVisible: false }}>
+      <Stack.Screen name="index" options={{ title: "Chats" }} />
+      <Stack.Screen name="start-chat" options={{ title: "Start Chat" }} />
+    </Stack>
+  ) : (
+    <Redirect href="/sign-in" />
+  );
 }
 
 const styles = StyleSheet.create({

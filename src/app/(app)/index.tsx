@@ -1,11 +1,19 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Button } from "@rneui/themed";
+import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
 import { supabase } from "src/infra/supabase";
 
 export default function Home() {
+  const router = useRouter();
+
   const [isLoading, setLoading] = useState(false);
+
+  const onPressStartChatButton = () => {
+    router.navigate("/start-chat");
+  };
 
   useEffect(() => {
     async function getUser() {
@@ -35,8 +43,20 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
-      <Text>Home</Text>
-      {isLoading ? <ActivityIndicator /> : null}
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : (
+        <>
+          <Text>Home</Text>
+          <Button
+            buttonStyle={styles.startChatButton}
+            containerStyle={styles.startChatButtonContainer}
+            icon={{ color: "white", name: "edit-3", type: "feather" }}
+            iconContainerStyle={styles.startChatButtonIconContainer}
+            onPress={onPressStartChatButton}
+          />
+        </>
+      )}
     </View>
   );
 }
@@ -48,5 +68,19 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     padding: 20,
+  },
+  startChatButton: {
+    borderRadius: 28,
+    height: 56,
+    width: 56,
+  },
+  startChatButtonContainer: {
+    bottom: 40,
+    position: "absolute",
+    right: 20,
+  },
+  startChatButtonIconContainer: {
+    height: 20,
+    width: 20,
   },
 });
