@@ -31,23 +31,29 @@ export const usePaginationQuery = <T, V extends Pagination = Pagination>({
   const result = useQuery({
     ...rest,
     queryFn: async () => {
-      const result = await queryFn({ ...variables, offset });
+      const res = await queryFn({ ...variables, offset });
 
-      setData((prev) => [...prev, ...result.data]);
-      setTotal(result.total);
+      setData((prev) => [...prev, ...res.data]);
+      console.log("res.data.length", res.data.length);
+      setTotal(res.total);
 
-      return result.data;
+      return res.data;
     },
-    queryKey: [...queryKey, variables.limit.toString(), offset.toString()],
+    queryKey: [...queryKey, variables.limit, offset],
   });
 
-  const hasMore = useMemo(() => data.length < total, [data, total]);
+  const hasMore = useMemo(() => data.length < total, [data.length, total]);
 
   const loadMore = useCallback(() => {
-    if (hasMore) {
+    if (hasMore && !result.isFetching) {
       setOffset(data.length);
     }
-  }, [data, hasMore]);
+  }, [data.length, hasMore, result.isFetching]);
 
-  return { ...result, data, hasMore, loadMore };
+  return {
+    ...result,
+    data: data.length ? data : result.data || [],
+    hasMore,
+    loadMore,
+  };
 };
