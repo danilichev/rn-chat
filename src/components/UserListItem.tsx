@@ -25,7 +25,7 @@ export const UserListItem = ({ item: user }: UserListItemProps) => {
   );
 
   return (
-    <ListItem>
+    <ListItem bottomDivider>
       <Avatar
         containerStyle={{ backgroundColor: avatarBackgroundColor }}
         rounded
