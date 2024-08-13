@@ -1,6 +1,6 @@
-import { SupabaseSession } from "src/infra/supabase";
+import { SupabaseSession } from "src/services/supabase";
 import { Database } from "src/types/database";
-import { User, UserSession } from "src/types/domain";
+import { Chat, User, UserSession } from "src/types/domain";
 
 type DbUser = Pick<
   Database["public"]["Tables"]["users"]["Row"],
@@ -8,10 +8,21 @@ type DbUser = Pick<
 >;
 
 export const dbUserToUser = (dbUser: DbUser): User => ({
-  avatarUrl: dbUser.avatar_url,
-  email: dbUser.email,
+  avatarUrl: dbUser.avatar_url ?? undefined,
+  email: dbUser.email ?? undefined,
   fullName: dbUser.full_name,
   id: dbUser.id,
+});
+
+type DbChat = Pick<
+  Database["public"]["Tables"]["chats"]["Row"],
+  "id" | "is_group" | "name"
+>;
+
+export const dbChatToChat = (dbChat: DbChat): Chat => ({
+  id: dbChat.id,
+  isGroup: dbChat.is_group,
+  name: dbChat.name ?? undefined,
 });
 
 export const supabaseSessionToUserSession = (

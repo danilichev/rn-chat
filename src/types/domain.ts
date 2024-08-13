@@ -1,6 +1,6 @@
 export interface User {
-  avatarUrl: string | null;
-  email: string | null;
+  avatarUrl?: string;
+  email?: string;
   fullName: string;
   id: string;
 }
@@ -11,4 +11,10 @@ export interface UserSession {
   refreshToken?: string;
   tokenType: string;
   userId: string;
+}
+
+export interface Chat {
+  id: string;
+  isGroup: boolean;
+  name?: string;
 }
