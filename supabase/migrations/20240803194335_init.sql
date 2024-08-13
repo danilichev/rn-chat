@@ -11,7 +11,8 @@ create table users (
 -- Create chats table
 create table chats (
     id uuid primary key,
-    title text,
+    name text,
+    is_group boolean not null default false,
     created_at timestamptz default current_timestamp,
     updated_at timestamptz default current_timestamp
 );
@@ -27,13 +28,19 @@ create table messages (
 );
 
 -- Create chat_users join table
-create table user_chats (
-    user_id uuid references users(id) on delete cascade,
+create table chat_users (
     chat_id uuid references chats(id) on delete cascade,
-    primary key (user_id, chat_id)
+    user_id uuid references users(id) on delete cascade,
+    primary key (chat_id, user_id)
 );
+
 
 -- Indexes for optimization
 create index idx_user_email on users(email);
+
 create index idx_message_chat_id on messages(chat_id);
 create index idx_message_user_id on messages(user_id);
+
+create index idx_chat_users_chat_id on chat_users(chat_id);
+create index idx_chat_users_user_id on chat_users(user_id);
+
