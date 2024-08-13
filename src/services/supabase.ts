@@ -76,3 +76,14 @@ export const supabase = createClient<Database>(
     },
   },
 );
+
+export const getCurrentUserId = async () => {
+  const user = await supabase.auth.getUser();
+  const userId = user.data?.user?.id;
+
+  if (!userId) {
+    await supabase.auth.signOut();
+  }
+
+  return user.data.user?.id;
+};
