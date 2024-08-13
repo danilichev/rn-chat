@@ -4,13 +4,15 @@ import { Stack } from "expo-router/stack";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, AppState, StyleSheet } from "react-native";
 
-import { supabase } from "src/infra/supabase";
+import { supabase } from "src/services/supabase";
 
 export default function AppLayout() {
   const [isAuthed, setAuthed] = useState(false);
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
+    // supabase.auth.signOut();
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       const user = session?.user;
 

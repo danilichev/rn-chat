@@ -1,14 +1,15 @@
-import { Avatar, ListItem } from "@rneui/themed";
+import { Avatar, ListItem, ListItemProps } from "@rneui/themed";
 import { useMemo } from "react";
+import { TouchableOpacity } from "react-native";
 
 import { User } from "src/types/domain";
 import { stringToColor } from "src/utils/ui";
 
-interface UserListItemProps {
+interface UserListItemProps extends Pick<ListItemProps, "onPress"> {
   item: User;
 }
 
-export const UserListItem = ({ item: user }: UserListItemProps) => {
+export const UserListItem = ({ item: user, ...props }: UserListItemProps) => {
   const avatarBackgroundColor = useMemo(
     () => stringToColor(user.fullName),
     [user.fullName],
@@ -25,7 +26,7 @@ export const UserListItem = ({ item: user }: UserListItemProps) => {
   );
 
   return (
-    <ListItem bottomDivider>
+    <ListItem Component={TouchableOpacity} bottomDivider {...props}>
       <Avatar
         containerStyle={{ backgroundColor: avatarBackgroundColor }}
         rounded

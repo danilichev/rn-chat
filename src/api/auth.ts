@@ -1,4 +1,4 @@
-import { supabase } from "src/infra/supabase";
+import { supabase } from "src/services/supabase";
 import { UserSession } from "src/types/domain";
 import { supabaseSessionToUserSession } from "src/utils/mappers";
 
