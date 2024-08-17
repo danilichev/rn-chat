@@ -59,3 +59,19 @@ export const findOneToOneChatId = async ({
 
   return data?.[0]?.chat_id ?? null;
 };
+
+interface GetChatParams {
+  id: string;
+}
+
+export const getChat = async ({ id }: GetChatParams): Promise<Chat> => {
+  const { data, error } = await supabase
+    .from("chats")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) throw error;
+
+  return dbChatToChat(data);
+};
