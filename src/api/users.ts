@@ -3,6 +3,22 @@ import { Pagination, PaginationResult } from "src/types/common";
 import { User } from "src/types/domain";
 import { dbUserToUser } from "src/utils/mappers";
 
+interface GetUserParams {
+  id: string;
+}
+
+export const getUser = async ({ id }: GetUserParams): Promise<User | null> => {
+  const { data, error } = await supabase
+    .from("users")
+    .select("avatar_url, email, full_name, id")
+    .eq("id", id)
+    .single();
+
+  if (error) throw error;
+
+  return data ? dbUserToUser(data) : null;
+};
+
 export const getUsers = async ({
   limit,
   offset = 0,
@@ -11,7 +27,7 @@ export const getUsers = async ({
 
   const { count, data, error } = await supabase
     .from("users")
-    .select(`avatar_url, email, full_name, id`, { count: "exact" })
+    .select("avatar_url, email, full_name, id", { count: "exact" })
     .neq("id", currentUserId)
     .range(offset, offset + limit - 1);
 
