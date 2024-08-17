@@ -1,10 +1,9 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Button } from "@rneui/themed";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
-import { supabase } from "src/services/supabase";
+const startChatIcon = { color: "white", name: "edit-3", type: "feather" };
 
 export default function Home() {
   const router = useRouter();
@@ -15,31 +14,7 @@ export default function Home() {
     router.navigate("/start-chat");
   };
 
-  useEffect(() => {
-    async function getUser() {
-      setLoading(true);
-      const userId = await AsyncStorage.getItem("rn-chat-user-id");
-
-      if (!userId) {
-        setLoading(false);
-        return;
-      }
-
-      console.log("userId", userId);
-
-      const { data, error } = await supabase
-        .from("users")
-        .select(`avatar_url, email, full_name`)
-        .eq("id", userId)
-        .single();
-
-      console.log(data, error);
-
-      setLoading(false);
-    }
-
-    getUser();
-  }, []);
+  // TODO: add loading users chats
 
   return (
     <View style={styles.container}>
@@ -51,7 +26,7 @@ export default function Home() {
           <Button
             buttonStyle={styles.startChatButton}
             containerStyle={styles.startChatButtonContainer}
-            icon={{ color: "white", name: "edit-3", type: "feather" }}
+            icon={startChatIcon}
             iconContainerStyle={styles.startChatButtonIconContainer}
             onPress={onPressStartChatButton}
           />
