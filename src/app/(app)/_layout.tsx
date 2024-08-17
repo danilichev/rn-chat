@@ -1,4 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Redirect } from "expo-router";
 import { Stack } from "expo-router/stack";
 import { useEffect, useState } from "react";
@@ -17,8 +16,6 @@ export default function AppLayout() {
       const user = session?.user;
 
       if (user) {
-        AsyncStorage.setItem("rn-chat-user-id", user.id);
-
         supabase.auth.onAuthStateChange((_, session) => {
           setAuthed(!!session?.user);
         });
@@ -30,8 +27,6 @@ export default function AppLayout() {
             supabase.auth.stopAutoRefresh();
           }
         });
-      } else {
-        AsyncStorage.removeItem("rn-chat-user-id");
       }
 
       setAuthed(!!user);
