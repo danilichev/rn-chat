@@ -1,53 +1,53 @@
-import { useMutation } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useRouter } from "expo-router";
 import { useCallback } from "react";
 import { FlatList, ListRenderItem, StyleSheet, View } from "react-native";
 
-import { createOneToOneChat, findOneToOneChatId } from "src/api/chats";
 import { getUsers } from "src/api/users";
 import { ListFooter } from "src/components/ListFooter";
 import { UserListItem } from "src/components/UserListItem";
+import { useLoadMore } from "src/hooks/useLoadMore";
 import { useNotifyOnChangeProps } from "src/hooks/useNotifyOnChangeProps";
-import { usePaginationQuery } from "src/hooks/usePaginationQuery";
+import { Pagination, PaginationResult } from "src/types/common";
 import { User } from "src/types/domain";
 import { keyExtractor } from "src/utils/common";
 
 const USERS_PER_REQUEST = 20;
 
 export default function StartChat() {
+  const router = useRouter();
+
   const notifyOnChangeProps = useNotifyOnChangeProps();
 
-  const { data, isFetching, loadMore } = usePaginationQuery<User>({
+  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery<
+    PaginationResult<User>,
+    Error,
+    User[],
+    string[],
+    Pagination
+  >({
     notifyOnChangeProps,
-    queryFn: getUsers,
+    queryFn: async ({ pageParam }) => {
+      return await getUsers(pageParam);
+    },
     queryKey: ["users"],
-    variables: { limit: USERS_PER_REQUEST },
+    initialPageParam: { limit: USERS_PER_REQUEST, offset: 0 },
+    getNextPageParam: (lastPage) => {
+      const loadedDataSize = lastPage.data.length + (lastPage.offset || 0);
+      return loadedDataSize < lastPage.total
+        ? { limit: USERS_PER_REQUEST, offset: loadedDataSize }
+        : null;
+    },
+    select: (data) => data.pages.flatMap((page) => page.data),
   });
 
-  const {
-    isPending: isFindOrCreateChatPending,
-    mutateAsync: findOrCreateChat,
-  } = useMutation({
-    mutationFn: async (userId: string) => {
-      let chatId = await findOneToOneChatId({ userId });
-
-      if (!chatId) {
-        const chat = await createOneToOneChat({ userId });
-        chatId = chat.id;
-      }
-
-      return chatId;
-    },
-    mutationKey: ["findOrCreateChat"],
-    onSuccess: (chatId) => {
-      console.log("chatId", chatId);
-      // if (!chat) return;
-      // navigate(`/chat/{chatId}`);
-    },
-  });
+  const loadMore = useLoadMore({ fetchNextPage, hasNextPage, isFetching });
 
   const makeOnPressListItemHandler = useCallback(
-    (userId: string) => () => findOrCreateChat(userId),
-    [findOrCreateChat],
+    (userId: string) => () => {
+      router.navigate({ pathname: "/chat", params: { userId } });
+    },
+    [router],
   );
 
   const renderItem = useCallback<ListRenderItem<User>>(
@@ -63,11 +63,11 @@ export default function StartChat() {
   return (
     <View style={styles.container}>
       <FlatList
-        ListFooterComponent={<ListFooter isLoading={true} />}
+        ListFooterComponent={<ListFooter isLoading={isFetching} />}
         data={data}
         initialNumToRender={USERS_PER_REQUEST}
         keyExtractor={keyExtractor}
-        onEndReached={isFetching ? undefined : loadMore}
+        onEndReached={loadMore}
         onEndReachedThreshold={0.25}
         renderItem={renderItem}
       />
