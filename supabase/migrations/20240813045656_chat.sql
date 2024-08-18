@@ -14,8 +14,8 @@ where
     c.is_group = false
     and cu1.user_id < cu2.user_id;
 
--- Create the function to check the user limit for one-to-one chats
-create or replace function check_one_to_one_chat_user_limit()
+-- Create the function to check the users limit chats
+create or replace function check_chat_users_limit()
 returns trigger as $$
 begin
     if (select count(*) from chat_users where chat_id = new.chat_id) >= 2 and 
@@ -27,7 +27,7 @@ end;
 $$ language plpgsql;
 
 -- Create the trigger to enforce the user limit for one-to-one chats
-create trigger one_to_one_chat_user_limit_trigger
+create trigger chat_users_limit_trigger
 before insert on chat_users
 for each row
-execute function check_one_to_one_chat_user_limit();
+execute function check_chat_users_limit();

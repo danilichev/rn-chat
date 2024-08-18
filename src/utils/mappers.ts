@@ -2,10 +2,10 @@ import { SupabaseSession } from "src/services/supabase";
 import { Database } from "src/types/database";
 import { Chat, User, UserSession } from "src/types/domain";
 
-type DbUser = Pick<
-  Database["public"]["Tables"]["users"]["Row"],
-  "avatar_url" | "email" | "full_name" | "id"
->;
+type DbUserFull = Database["public"]["Tables"]["users"]["Row"];
+
+type DbUser = Pick<DbUserFull, "avatar_url" | "full_name" | "id"> &
+  Partial<Pick<DbUserFull, "email">>;
 
 export const dbUserToUser = (dbUser: DbUser): User => ({
   avatarUrl: dbUser.avatar_url ?? undefined,

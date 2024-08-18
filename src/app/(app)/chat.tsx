@@ -24,7 +24,7 @@ export default function Chat() {
 
   const { data: chat, isPending: isChatPending } = useQuery({
     enabled: !!chatId,
-    // initialData () => {}; TODO: Implement afeter adding chats query
+    // initialData () => {}; TODO: Implement after adding chats query
     queryFn: ({ queryKey: [, id] }) => getChat({ id: id as string }),
     queryKey: ["chat", chatId],
   });
@@ -52,6 +52,9 @@ export default function Chat() {
       return chatId;
     },
     mutationKey: ["findOrCreateChat", userId],
+    onError: (error) => {
+      console.error("findOrCreateChat error", error);
+    },
     onSuccess: (chatId) => {
       if (chatId) {
         router.setParams({ chatId });

@@ -1,8 +1,9 @@
 import { v4 as uuid } from "uuid";
 
 import { getCurrentUserId, supabase } from "src/services/supabase";
-import { Chat } from "src/types/domain";
-import { dbChatToChat } from "src/utils/mappers";
+import { Pagination, PaginationResult } from "src/types/common";
+import { Chat, ChatPreview, User } from "src/types/domain";
+import { dbChatToChat, dbUserToUser } from "src/utils/mappers";
 
 interface CreateOneToOneChatParams {
   userId: string;
@@ -74,4 +75,58 @@ export const getChat = async ({ id }: GetChatParams): Promise<Chat> => {
   if (error) throw error;
 
   return dbChatToChat(data);
+};
+
+export const getChats = async ({
+  limit,
+  offset = 0,
+}: Pagination): Promise<PaginationResult<ChatPreview>> => {
+  const currentUserId = await getCurrentUserId();
+
+  const { count, data, error } = await supabase
+    .from("chat_users")
+    .select(
+      `
+      chats(
+        id,
+        name,
+        is_group,
+        messages(
+          id,
+          text
+        ),
+        users(
+          id,
+          avatar_url,
+          full_name
+        )
+      ),
+      user_id
+      `,
+      { count: "exact" },
+    )
+    .eq("user_id", currentUserId as string)
+    .filter("chats.users.id", "neq", currentUserId)
+    .range(offset, offset + limit - 1);
+
+  if (error) throw error;
+
+  return {
+    data: data.reduce(
+      (acc, { chats }) =>
+        chats
+          ? [
+              ...acc,
+              {
+                ...dbChatToChat(chats),
+                users: chats.users.map(dbUserToUser),
+              } as Chat & { users: User[] },
+            ]
+          : acc,
+      [] as ChatPreview[],
+    ),
+    limit,
+    offset,
+    total: count || 0,
+  };
 };

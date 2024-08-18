@@ -18,3 +18,7 @@ export interface Chat {
   isGroup: boolean;
   name?: string;
 }
+
+export interface ChatPreview extends Chat {
+  users: User[];
+}
