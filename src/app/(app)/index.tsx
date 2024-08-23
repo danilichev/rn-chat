@@ -1,32 +1,23 @@
 import { Button } from "@rneui/themed";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  ListRenderItem,
-  StyleSheet,
-  View,
-} from "react-native";
+import { useCallback } from "react";
+import { FlatList, ListRenderItem, StyleSheet, View } from "react-native";
 
 import { getChats } from "src/api/chats";
 import { ChatPreviewListItem } from "src/components/ChatPreviewListItem";
 import { ListFooter } from "src/components/ListFooter";
 import { useLoadMore } from "src/hooks/useLoadMore";
-import { useNotifyOnChangeProps } from "src/hooks/useNotifyOnChangeProps";
 import { Pagination, PaginationResult } from "src/types/common";
 import { ChatPreview } from "src/types/domain";
 import { keyExtractor } from "src/utils/common";
 
-const CHATS_PER_REQUEST = 20;
-
 const startChatIcon = { color: "white", name: "edit-3", type: "feather" };
+
+const CHATS_PER_REQUEST = 20;
 
 export default function Home() {
   const router = useRouter();
-
-  const notifyOnChangeProps = useNotifyOnChangeProps();
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery<
     PaginationResult<ChatPreview>,
@@ -35,7 +26,6 @@ export default function Home() {
     string[],
     Pagination
   >({
-    notifyOnChangeProps,
     queryFn: async ({ pageParam }) => {
       return await getChats(pageParam);
     },
@@ -48,6 +38,7 @@ export default function Home() {
         : null;
     },
     select: (data) => data.pages.flatMap((page) => page.data),
+    structuralSharing: false,
   });
 
   const loadMore = useLoadMore({ fetchNextPage, hasNextPage, isFetching });

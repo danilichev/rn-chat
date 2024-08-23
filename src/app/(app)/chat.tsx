@@ -10,8 +10,8 @@ import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
 import { createOneToOneChat, findOneToOneChatId, getChat } from "src/api/chats";
 import { getUser } from "src/api/users";
-import { PaginationResult } from "src/types/common";
-import { User } from "src/types/domain";
+import { Pagination, PaginationResult } from "src/types/common";
+import { ChatPreview, User } from "src/types/domain";
 
 type ScreenSearchParams = {
   chatId?: string;
@@ -47,6 +47,36 @@ export default function Chat() {
       if (!chatId) {
         const chat = await createOneToOneChat({ userId });
         chatId = chat.id;
+
+        const user = queryClient.getQueryData<User>(["user", userId]);
+
+        if (!user) return;
+
+        queryClient.setQueryData(
+          ["chats"],
+          (data: InfiniteData<PaginationResult<ChatPreview>, Pagination>) => {
+            if (!data) return;
+
+            const newChat: ChatPreview = {
+              id: chat.id,
+              isGroup: false,
+              users: [user],
+            };
+
+            const [firstPage, ...restPages] = data.pages || [];
+
+            return {
+              ...data,
+              pages: [
+                {
+                  ...firstPage,
+                  data: [newChat, ...firstPage.data],
+                },
+                ...restPages,
+              ].map((page) => ({ ...page, total: page.total + 1 })),
+            };
+          },
+        );
       }
 
       return chatId;
