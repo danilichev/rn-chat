@@ -24,7 +24,10 @@ export default function Chat() {
 
   const { data: chat, isPending: isChatPending } = useQuery({
     enabled: !!chatId,
-    // initialData () => {}; TODO: Implement after adding chats query
+    initialData: queryClient
+      .getQueryData<InfiniteData<PaginationResult<ChatPreview>>>(["chats"])
+      ?.pages.flatMap((page) => page.data)
+      .find((chat) => chat.id === chatId),
     queryFn: ({ queryKey: [, id] }) => getChat({ id: id as string }),
     queryKey: ["chat", chatId],
   });
