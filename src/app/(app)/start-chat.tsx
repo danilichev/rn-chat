@@ -14,7 +14,7 @@ import { keyExtractor } from "src/utils/common";
 
 const USERS_PER_REQUEST = 20;
 
-export default function StartChat() {
+export default function StartChatScreen() {
   const router = useRouter();
 
   const notifyOnChangeProps = useNotifyOnChangeProps();
@@ -40,6 +40,8 @@ export default function StartChat() {
     },
     select: (data) => data.pages.flatMap((page) => page.data),
   });
+
+  console.log("data", JSON.stringify(data, null, 2));
 
   const loadMore = useLoadMore({ fetchNextPage, hasNextPage, isFetching });
 

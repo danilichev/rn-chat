@@ -16,7 +16,7 @@ const startChatIcon = { color: "white", name: "edit-3", type: "feather" };
 
 const CHATS_PER_REQUEST = 20;
 
-export default function Home() {
+export default function HomeScreen() {
   const router = useRouter();
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery<

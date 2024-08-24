@@ -10,6 +10,7 @@ import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
 import { createOneToOneChat, findOneToOneChatId, getChat } from "src/api/chats";
 import { getUser } from "src/api/users";
+import { Chat } from "src/components/Chat";
 import { Pagination, PaginationResult } from "src/types/common";
 import { ChatPreview, User } from "src/types/domain";
 
@@ -18,7 +19,7 @@ type ScreenSearchParams = {
   userId?: string;
 };
 
-export default function Chat() {
+export default function ChatScreen() {
   const { chatId, userId } = useLocalSearchParams<ScreenSearchParams>();
   const queryClient = useQueryClient();
 
@@ -104,15 +105,14 @@ export default function Chat() {
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ title: user?.fullName }} />
-      {isChatPending ? <ActivityIndicator /> : <Text>Chat {chat?.id}</Text>}
+      {/* {isChatPending ? <ActivityIndicator /> : <Text>Chat {chat?.id}</Text>} */}
+      <Chat isLoading={isChatPending} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: "center",
     flex: 1,
-    justifyContent: "center",
   },
 });
