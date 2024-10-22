@@ -1,11 +1,19 @@
-import { Redirect } from "expo-router";
+import { Icon } from "@rneui/themed";
+import { Redirect, useNavigation } from "expo-router";
 import { Stack } from "expo-router/stack";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, AppState, StyleSheet } from "react-native";
+import {
+  ActivityIndicator,
+  AppState,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 
 import { supabase } from "src/services/supabase";
 
 export default function AppLayout() {
+  const navigation = useNavigation();
+
   const [isAuthed, setAuthed] = useState(false);
   const [isLoading, setLoading] = useState(true);
 
@@ -39,7 +47,22 @@ export default function AppLayout() {
   }
 
   return isAuthed ? (
-    <Stack screenOptions={{ headerBackTitleVisible: false }}>
+    <Stack
+      screenOptions={{
+        headerBackTitleVisible: false,
+        headerBackVisible: false,
+        headerLeft: ({ canGoBack }) =>
+          canGoBack ? (
+            <Icon
+              Component={TouchableOpacity}
+              color="#546E7A"
+              name="chevron-left"
+              onPress={navigation.goBack}
+              size={32}
+            />
+          ) : null,
+      }}
+    >
       <Stack.Screen name="index" options={{ title: "Chats" }} />
       <Stack.Screen name="start-chat" options={{ title: "Start Chat" }} />
     </Stack>

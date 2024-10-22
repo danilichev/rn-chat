@@ -6,7 +6,7 @@ import {
 } from "@tanstack/react-query";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useEffect } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 import { createOneToOneChat, findOneToOneChatId, getChat } from "src/api/chats";
 import { getUser } from "src/api/users";
@@ -101,6 +101,9 @@ export default function ChatScreen() {
       findOrCreateChat(userId);
     }
   }, [chatId, findOrCreateChat, userId]);
+
+  console.log("user", user);
+  console.log("chat", chat);
 
   return (
     <View style={styles.container}>

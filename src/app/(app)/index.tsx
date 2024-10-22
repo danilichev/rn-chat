@@ -95,6 +95,7 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     height: 56,
     width: 56,
+    backgroundColor: "#546E7A",
   },
   startChatButtonContainer: {
     bottom: 40,
