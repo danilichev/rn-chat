@@ -1,8 +1,8 @@
 import { getCurrentUserId, supabase } from "src/services/supabase";
 import { Pagination, PaginationResult } from "src/types/common";
-import { dbUserToUser } from "src/utils/mappers";
 
 import { User } from "./types";
+import { dbUserToUser } from "./utils";
 
 interface GetUserParams {
   id: string;

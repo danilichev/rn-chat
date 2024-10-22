@@ -1,7 +1,7 @@
 import { supabase } from "src/services/supabase";
-import { supabaseSessionToUserSession } from "src/utils/mappers";
 
-import { UserSession } from "./types";
+import { AuthSession } from "./types";
+import { supabaseSessionToAuthSession } from "./utils";
 
 export interface SignInWithEmailParams {
   email: string;
@@ -10,7 +10,7 @@ export interface SignInWithEmailParams {
 
 export const signInWithEmail = async (
   params: SignInWithEmailParams,
-): Promise<UserSession> => {
+): Promise<AuthSession> => {
   const { data, error } = await supabase.auth.signInWithPassword(params);
 
   if (error) throw error;
@@ -19,7 +19,7 @@ export const signInWithEmail = async (
 
   if (!data?.session) throw new Error("User is not authenticated");
 
-  return supabaseSessionToUserSession(data.session);
+  return supabaseSessionToAuthSession(data.session);
 };
 
 export interface SignUpWithEmailParams {
@@ -30,7 +30,7 @@ export interface SignUpWithEmailParams {
 
 export const signUpWithEmail = async (
   params: SignUpWithEmailParams,
-): Promise<UserSession | null> => {
+): Promise<AuthSession | null> => {
   const { data, error } = await supabase.auth.signUp({
     email: params.email,
     password: params.password,
@@ -46,7 +46,7 @@ export const signUpWithEmail = async (
 
   if (!data?.user) throw new Error("User not found");
 
-  return data?.session ? supabaseSessionToUserSession(data.session) : null;
+  return data?.session ? supabaseSessionToAuthSession(data.session) : null;
 };
 
 export const signOut = async () => {

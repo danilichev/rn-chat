@@ -1,4 +1,4 @@
-export interface UserSession {
+export interface AuthSession {
   accessToken: string;
   expiresAt?: Date;
   refreshToken?: string;

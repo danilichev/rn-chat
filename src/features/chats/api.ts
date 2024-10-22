@@ -3,9 +3,10 @@ import { v4 as uuid } from "uuid";
 import { User } from "src/features/users/types";
 import { getCurrentUserId, supabase } from "src/services/supabase";
 import { Pagination, PaginationResult } from "src/types/common";
-import { dbChatToChat, dbUserToUser } from "src/utils/mappers";
 
+import { dbUserToUser } from "../users/utils";
 import { Chat, ChatPreview } from "./types";
+import { dbChatToChat } from "./utils";
 
 interface CreateOneToOneChatParams {
   userId: string;
