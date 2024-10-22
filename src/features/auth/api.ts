@@ -1,6 +1,7 @@
 import { supabase } from "src/services/supabase";
-import { UserSession } from "src/types/domain";
 import { supabaseSessionToUserSession } from "src/utils/mappers";
+
+import { UserSession } from "./types";
 
 export interface SignInWithEmailParams {
   email: string;

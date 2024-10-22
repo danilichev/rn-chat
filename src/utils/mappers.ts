@@ -1,6 +1,8 @@
+import { UserSession } from "src/features/auth/types";
+import { Chat } from "src/features/chats/types";
+import { User } from "src/features/users/types";
 import { SupabaseSession } from "src/services/supabase";
 import { Database } from "src/types/database";
-import { Chat, User, UserSession } from "src/types/domain";
 
 type DbUserFull = Database["public"]["Tables"]["users"]["Row"];
 

@@ -4,12 +4,12 @@ import { useRouter } from "expo-router";
 import { useCallback } from "react";
 import { FlatList, ListRenderItem, StyleSheet, View } from "react-native";
 
-import { getChats } from "src/api/chats";
-import { ChatPreviewListItem } from "src/components/ChatPreviewListItem";
 import { ListFooter } from "src/components/ListFooter";
+import { getChats } from "src/features/chats/api";
+import { ChatPreviewListItem } from "src/features/chats/components/ChatPreviewListItem";
+import { ChatPreview } from "src/features/chats/types";
 import { useLoadMore } from "src/hooks/useLoadMore";
 import { Pagination, PaginationResult } from "src/types/common";
-import { ChatPreview } from "src/types/domain";
 import { keyExtractor } from "src/utils/common";
 
 const startChatIcon = { color: "white", name: "edit-3", type: "feather" };

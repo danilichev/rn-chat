@@ -4,8 +4,9 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 
-import { signInWithEmail, signUpWithEmail } from "src/api/auth";
 import { LinkButton } from "src/components/LinkButton";
+
+import { signInWithEmail, signUpWithEmail } from "../api";
 
 type AuthFormProps = {
   type: "sign-in" | "sign-up";

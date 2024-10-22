@@ -3,13 +3,13 @@ import { useRouter } from "expo-router";
 import { useCallback } from "react";
 import { FlatList, ListRenderItem, StyleSheet, View } from "react-native";
 
-import { getUsers } from "src/api/users";
 import { ListFooter } from "src/components/ListFooter";
-import { UserListItem } from "src/components/UserListItem";
+import { getUsers } from "src/features/users/api";
+import { UserListItem } from "src/features/users/components/UserListItem";
+import { User } from "src/features/users/types";
 import { useLoadMore } from "src/hooks/useLoadMore";
 import { useNotifyOnChangeProps } from "src/hooks/useNotifyOnChangeProps";
 import { Pagination, PaginationResult } from "src/types/common";
-import { User } from "src/types/domain";
 import { keyExtractor } from "src/utils/common";
 
 const USERS_PER_REQUEST = 20;

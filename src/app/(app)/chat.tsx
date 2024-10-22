@@ -8,11 +8,16 @@ import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 
-import { createOneToOneChat, findOneToOneChatId, getChat } from "src/api/chats";
-import { getUser } from "src/api/users";
-import { Chat } from "src/components/Chat";
+import {
+  createOneToOneChat,
+  findOneToOneChatId,
+  getChat,
+} from "src/features/chats/api";
+import { Chat } from "src/features/chats/components/Chat";
+import { ChatPreview } from "src/features/chats/types";
+import { getUser } from "src/features/users/api";
+import { User } from "src/features/users/types";
 import { Pagination, PaginationResult } from "src/types/common";
-import { ChatPreview, User } from "src/types/domain";
 
 type ScreenSearchParams = {
   chatId?: string;

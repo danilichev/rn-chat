@@ -1,9 +1,11 @@
 import { v4 as uuid } from "uuid";
 
+import { User } from "src/features/users/types";
 import { getCurrentUserId, supabase } from "src/services/supabase";
 import { Pagination, PaginationResult } from "src/types/common";
-import { Chat, ChatPreview, User } from "src/types/domain";
 import { dbChatToChat, dbUserToUser } from "src/utils/mappers";
+
+import { Chat, ChatPreview } from "./types";
 
 interface CreateOneToOneChatParams {
   userId: string;
